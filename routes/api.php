@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthApiController;
 use App\Http\Controllers\NoteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,5 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/', function () {
     return redirect('/note');
 });
-Route::get('/note', [NoteController::class, 'index']);
+
+Route::post('/auth/register', [AuthApiController::class, 'authRegister']);
+Route::post('/auth/login', [AuthApiController::class, 'authLogin']);
 Route::resource('/note', NoteController::class)->except(['create', 'edit']);

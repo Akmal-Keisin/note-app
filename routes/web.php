@@ -14,5 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/mynotes-admin');
 });
+
+Route::resource('/mynotes-admin', UserController::class);

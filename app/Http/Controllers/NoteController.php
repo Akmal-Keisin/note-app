@@ -76,18 +76,19 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Note  $note
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Note $note)
-    {
-        //
+        try {
+            return response()->json([
+                'status' => 200,
+                'info' => 'Data Obtained Successfully',
+                'data' => $note
+            ], 200);
+        } catch (QueryException $e) {
+            return response()->json([
+                'status' => 500,
+                'info' => 'Internal Server Error',
+                'data' => $e
+            ], 500);
+        }
     }
 
     /**
@@ -99,7 +100,43 @@ class NoteController extends Controller
      */
     public function update(Request $request, Note $note)
     {
-        //
+        // Validation Check
+
+        $validatedData = Validator::make($request->all(), [
+            'title' => 'nullable',
+            'body' => 'nullable'
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json([
+                'status' => 401,
+                'info' => 'Validation Failed',
+                'data' => $validatedData->errors()
+            ], 401);
+        }
+
+        try {
+            // Request Check
+            if (!empty($validatedData)) {
+                $note->update($request->all());
+                return response()->json([
+                    'status' => 200,
+                    'info' => 'Data Created Successfully',
+                    'data' => $note
+                ], 201);
+            }
+            return response()->json([
+                'status' => 200,
+                'info' => 'Data Updated Successfully',
+                'data' => $note
+            ], 201);
+        } catch (QueryException $e) {
+            return response()->json([
+                'status' => 500,
+                'info' => 'Internal Server Error',
+                'data' => $e->errorInfo
+            ], 500);
+        }
     }
 
     /**
@@ -110,6 +147,19 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        //
+        try {
+            $note->delete();
+            return response()->json([
+                'status' => 200,
+                'info' => 'Data Deleted Successfully',
+                'data' => $note
+            ], 200);
+        } catch (QueryException $e) {
+            return response()->json([
+                'status' => 500,
+                'info' => 'Internal Server Error',
+                'data' => $e->errorInfo
+            ], 500);
+        }
     }
 }

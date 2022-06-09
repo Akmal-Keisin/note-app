@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -14,7 +17,10 @@ class AdminController extends Controller
      */
     public function index()
     {
-        //
+        $admins = Admin::all();
+        return view('Admins.index', [
+            'admins' => $admins
+        ]);
     }
 
     /**
@@ -24,7 +30,7 @@ class AdminController extends Controller
      */
     public function create()
     {
-        //
+        return view('Admins.create');
     }
 
     /**
@@ -35,7 +41,16 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|max:255|unique:admins,email',
+            'password' => 'required'
+        ]);
+
+        $validatedData['password'] = Hash::make($request->password);
+        Admin::create($validatedData);
+
+        return redirect('mynotes-admins')->with('success', 'Data Created Successfully');
     }
 
     /**
@@ -44,9 +59,12 @@ class AdminController extends Controller
      * @param  \App\Models\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function show(Admin $admin)
+    public function show($id)
     {
-        //
+        $admin = Admin::findOrFail($id);
+        return view('Admins.show', [
+            'admin' => $admin
+        ]);
     }
 
     /**
@@ -55,9 +73,12 @@ class AdminController extends Controller
      * @param  \App\Models\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function edit(Admin $admin)
+    public function edit($id)
     {
-        //
+        $admin = Admin::findOrFail($id);
+        return view('Admins.edit', [
+            'admin' => $admin
+        ]);
     }
 
     /**
@@ -67,9 +88,20 @@ class AdminController extends Controller
      * @param  \App\Models\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Admin $admin)
+    public function update(Request $request, $id)
     {
-        //
+        $admin = Admin::findOrFail($id);
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'email' => [Rule::unique('admins')->ignore($id), 'nullable', 'max:255', 'email'],
+            'password' => 'required',
+            'confirm_password' => 'required|same:password'
+        ]);
+
+        $validatedData['password'] = Hash::make($request->password);
+
+        $admin->update($validatedData);
+        return redirect('mynotes-admins')->with('success', 'Data Updated Successfully');
     }
 
     /**
@@ -78,8 +110,10 @@ class AdminController extends Controller
      * @param  \App\Models\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Admin $admin)
+    public function destroy($id)
     {
-        //
+        $admin = Admin::findOrFail($id);
+        $admin->delete();
+        return back()->with('success', 'Data Deleted Successfully');
     }
 }

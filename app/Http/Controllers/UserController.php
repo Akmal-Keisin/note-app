@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -13,7 +17,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::all();
+        return view("Users.index", [
+            'users' => $users
+        ]);
     }
 
     /**
@@ -23,7 +30,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view("User.create");
     }
 
     /**
@@ -34,7 +41,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -45,7 +51,10 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::findOrFail($id);
+        return view("User.show", [
+            'user' => $user
+        ]);
     }
 
     /**
@@ -56,7 +65,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::findOrFail($id);
+        return view("User.edit", [
+            'user' => $user
+        ]);
     }
 
     /**
@@ -68,7 +80,6 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
     }
 
     /**
@@ -79,6 +90,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+        Storage::delete($user->image);
+        $user->delete();
+        return back()->with('success', 'Data Deleted Successfully');
     }
 }

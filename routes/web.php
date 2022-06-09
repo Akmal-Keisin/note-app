@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,5 +20,14 @@ Route::get('/', function () {
     return redirect('/mynotes-admin');
 });
 
-Route::resource('/mynotes-admin', AdminController::class);
+Route::resource('/mynotes-admins', AdminController::class);
 Route::resource('/mynotes-users', UserController::class);
+
+// Auth
+Route::get('/auth/login', [AuthController::class, 'login']);
+Route::get('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/login', [AuthController::class, 'authLogin']);
+Route::post('/auth/register', [AuthController::class, 'authRegister']);
+Route::get('/test', function () {
+    return view('tables');
+});

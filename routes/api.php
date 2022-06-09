@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthApiController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\UserApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,8 +17,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::resource('/mynote', NoteController::class)->except(['create', 'edit']);
+    Route::post('/auth/logout', [AuthApiController::class, 'authLogout']);
+    Route::get('/user-profile', [UserApiController::class, 'show']);
+    Route::put('/user-profile', [UserApiController::class, 'update']);
 });
 
 Route::get('/', function () {
@@ -26,4 +30,3 @@ Route::get('/', function () {
 
 Route::post('/auth/register', [AuthApiController::class, 'authRegister']);
 Route::post('/auth/login', [AuthApiController::class, 'authLogin']);
-Route::resource('/note', NoteController::class)->except(['create', 'edit']);

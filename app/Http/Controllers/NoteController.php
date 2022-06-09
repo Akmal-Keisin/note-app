@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class NoteController extends Controller
@@ -22,13 +23,13 @@ class NoteController extends Controller
                 'status' => 200,
                 'info' => 'Data Obtained Successfully',
                 'data' => $notes
-            ]);
+            ], 200);
         } catch (QueryException $e) {
             return response()->json([
                 'status' => 500,
                 'info' => 'Internal Server Error',
                 'data' => $e->errorInfo
-            ]);
+            ], 500);
         }
     }
 
@@ -41,7 +42,7 @@ class NoteController extends Controller
     public function store(Request $request)
     {
         $validatedData = Validator::make($request->all(), [
-            'title' => 'required|max255',
+            'title' => 'required|max:255',
             'body' => 'required'
         ]);
         if ($validatedData->fails()) {
@@ -49,22 +50,23 @@ class NoteController extends Controller
                 'status' => 401,
                 'info' => 'Validation Failed',
                 'data' => $validatedData->errors()
-            ]);
+            ], 401);
         }
         try {
             $data = $request->all();
+            $data['user_id'] = Auth::user()->id;
             Note::create($data);
             return response()->json([
                 'status' => 201,
                 'info' => 'Data Created Successfully',
                 'data' => $data
-            ]);
+            ], 201);
         } catch (QueryException $e) {
             return response()->json([
                 'status' => 500,
                 'info' => 'Internal Server Error',
                 'data' => $e->errorInfo
-            ]);
+            ], 500);
         }
     }
 
@@ -74,14 +76,23 @@ class NoteController extends Controller
      * @param  \App\Models\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function show(Note $note)
+    public function show($id)
     {
         try {
-            return response()->json([
-                'status' => 200,
-                'info' => 'Data Obtained Successfully',
-                'data' => $note
-            ], 200);
+            $note = Note::find($id);
+            if ($note) {
+                return response()->json([
+                    'status' => 200,
+                    'info' => 'Data Obtained Successfully',
+                    'data' => $note
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'info' => 'Data Not Found',
+                    'data' => $note
+                ], 404);
+            }
         } catch (QueryException $e) {
             return response()->json([
                 'status' => 500,
@@ -98,7 +109,7 @@ class NoteController extends Controller
      * @param  \App\Models\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Note $note)
+    public function update(Request $request, $id)
     {
         // Validation Check
 
@@ -116,20 +127,28 @@ class NoteController extends Controller
         }
 
         try {
-            // Request Check
-            if (!empty($validatedData)) {
-                $note->update($request->all());
+            $note = Note::find($id);
+            if ($note) {
+                // Request Check
+                if (!empty($validatedData)) {
+                    $note->update($request->all());
+                    return response()->json([
+                        'status' => 200,
+                        'info' => 'Data Updated Successfully',
+                        'data' => $note
+                    ], 201);
+                }
                 return response()->json([
                     'status' => 200,
-                    'info' => 'Data Created Successfully',
+                    'info' => 'Data Updated Successfully',
                     'data' => $note
                 ], 201);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'info' => 'Data Not Found'
+                ], 404);
             }
-            return response()->json([
-                'status' => 200,
-                'info' => 'Data Updated Successfully',
-                'data' => $note
-            ], 201);
         } catch (QueryException $e) {
             return response()->json([
                 'status' => 500,
@@ -145,15 +164,22 @@ class NoteController extends Controller
      * @param  \App\Models\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Note $note)
+    public function destroy($id)
     {
         try {
-            $note->delete();
-            return response()->json([
-                'status' => 200,
-                'info' => 'Data Deleted Successfully',
-                'data' => $note
-            ], 200);
+            $note = Note::find($id);
+            if ($note) {
+                $note->delete();
+                return response()->json([
+                    'status' => 200,
+                    'info' => 'Data Deleted Successfully'
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'info' => 'Data Not Found'
+                ], 404);
+            }
         } catch (QueryException $e) {
             return response()->json([
                 'status' => 500,

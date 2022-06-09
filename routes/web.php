@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,4 +19,5 @@ Route::get('/', function () {
     return redirect('/mynotes-admin');
 });
 
-Route::resource('/mynotes-admin', UserController::class);
+Route::resource('/mynotes-admin', AdminController::class);
+Route::resource('/mynotes-users', UserController::class);

@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('/mynotes-admin');
+    return redirect('/mynotes-admins');
 });
 
 Route::resource('/mynotes-admins', AdminController::class);

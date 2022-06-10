@@ -16,23 +16,27 @@
                         </ul>
                     </div>
                 @endif
-                <form action="/mynotes-admins" method="POST">
+                <form action="/mynotes-admins" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="">
                                     <label for="name" class="form-label">Name :</label>
-                                    <input type="text" class="form-control" name="name" placeholder="Admin Name">
+                                    <input type="text" class="form-control" name="name" placeholder="Admin Name" value="{{ old('name') }}">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="">
                                     <label for="email" class="form-label">Email :</label>
-                                    <input type="email" class="form-control" name="email" placeholder="Admin Email">
+                                    <input type="email" class="form-control" name="email" placeholder="Admin Email" value="{{ old('email') }}">
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Profile Photo :</label>
+                        <input type="file" class="form-control-file" name="image" placeholder="Profile Photo">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password :</label>

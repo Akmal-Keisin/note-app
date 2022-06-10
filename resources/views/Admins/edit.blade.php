@@ -16,7 +16,7 @@
                         </ul>
                     </div>
                 @endif
-                <form action="/mynotes-admins/{{ $admin->id }}" method="POST">
+                <form action="/mynotes-admins/{{ $admin->id }}" method="POST" enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
                     <div class="form-group">
@@ -34,6 +34,10 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Photo Profile :</label>
+                        <input type="file" class="form-control-file" name="image" placeholder="Photo Profile">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password :</label>

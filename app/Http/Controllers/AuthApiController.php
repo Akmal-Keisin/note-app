@@ -35,9 +35,9 @@ class AuthApiController extends Controller
         $data = $request->all();
         try {
             if ($request->hasFile('image')) {
-                $data['image'] = $request->file('image')->store('images');
+                $data['image'] = env('APP_BASE_URL') . '/storage/' . $request->file('image')->store('images');
             } else {
-                $data['image'] = 'images/default.png';
+                $data['image'] = env('APP_BASE_URL') . '/storage/images/default.png';
             }
             $data['password'] = Hash::make($request->password);
             $user = User::create($data);
@@ -72,7 +72,10 @@ class AuthApiController extends Controller
         }
 
         try {
+            // get all request data
             $data = $request->all();
+
+            // checking for user
             if (Auth::attempt($data)) {
                 $user = $request->user();
                 $data = [
@@ -83,6 +86,15 @@ class AuthApiController extends Controller
                 ];
                 return response()->json($data, 200);
             }
+
+            // return login failed if user not exist / wrong password
+            return response()->json([
+                'status' => 400,
+                'info' => 'Login Gagal',
+                'data' => 'Email Atau Password Tidak Valid'
+            ], 400);
+
+            // catch query exception
         } catch (QueryException $e) {
             return response()->json([
                 'status' => 500,
@@ -95,18 +107,25 @@ class AuthApiController extends Controller
     public function authLogout(Request $request)
     {
         try {
+            // checking is user send bearer token or not
             if ($request->bearerToken()) {
+
+                // deleting user token
                 $request->user()->currentAccessToken()->delete();
                 return response()->json([
                     'status' => 200,
                     'info' => 'Logout Success'
                 ], 200);
             }
+
+            // return logout failed if bearer token isn't set yet
             return response()->json([
                 'status' => 401,
                 'info' => 'Logout Failed',
                 'data' => 'Unauthenticated'
             ], 401);
+
+            // catch query exception
         } catch (QueryException $e) {
             return response()->json([
                 'status' => 500,

@@ -4,23 +4,28 @@
     <div class="col-lg-6">
         <div class="card shadow">
             <div class="card-header">
-                <h6 class="m-0 font-weight-bold text-primary">Add Admin</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Admin Detail</h6>
             </div>
             <div class="card-body">
-                <table class="table-responsive">
-                    <tbody>
-                        <tr>
-                            <th><b>Name</b></th>
-                            <td> : </td>
-                            <td>{{ $admin->name }}</td>
-                        </tr>
-                        <tr>
-                            <th><b>Email</b></th>
-                            <td> : </td>
-                            <td>{{ $admin->email }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="d-flex">
+                    <div class="mr-3">
+                        <img style="max-width: 150px" src="{{ asset('storage/' . $admin->image) }}" alt="{{ $admin->name }}">
+                    </div>
+                    <table class="table-responsive">
+                        <tbody>
+                            <tr>
+                                <th><b>Name</b></th>
+                                <td> : </td>
+                                <td>{{ $admin->name }}</td>
+                            </tr>
+                            <tr>
+                                <th><b>Email</b></th>
+                                <td> : </td>
+                                <td>{{ $admin->email }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

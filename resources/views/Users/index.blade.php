@@ -5,6 +5,11 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Users List Data</h6>
+        @if ($message = Session::get('success'))
+            <div class="alert alert-success m-3">
+                {{ $message }}
+            </div>
+        @endif
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -30,9 +35,13 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->phone_number }}</td>
                         <td>
-                            <a href="#" class="btn btn-info">Show</a>
-                            <a href="#" class="btn btn-warning">Edit</a>
-                            <a href="#" class="btn btn-danger">Delete</a>
+                            <a href="/mynotes-users/{{ $user->id }}" class="btn btn-info">Show</a>
+                            <a href="/mynotes-users/{{ $user->id }}/edit" class="btn btn-warning">Edit</a>
+                            <form action="/mynotes-users/{{ $user->id }}" method="POST" class="d-inline-block">
+                                @method('DELETE')
+                                @csrf
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are You Sure')">Delete</button>
+                            </form>
                         </td>
                     </tr>
                     @endforeach

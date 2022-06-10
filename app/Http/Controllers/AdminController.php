@@ -41,15 +41,28 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
+        // validating request
         $validatedData = $request->validate([
             'name' => 'required|max:255',
+            'image' => 'nullable|image',
             'email' => 'required|max:255|unique:admins,email',
             'password' => 'required'
         ]);
 
+        // storing image
+        if ($request->image !== null) {
+            $validatedData['image'] = $request->file('image')->store('images');
+        } else {
+            $validatedData['image'] = 'images/default.png';
+        }
+
+        // hashing password
         $validatedData['password'] = Hash::make($request->password);
+
+        // create admin
         Admin::create($validatedData);
 
+        // redirect to view
         return redirect('mynotes-admins')->with('success', 'Data Created Successfully');
     }
 
@@ -90,17 +103,32 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // find admin
         $admin = Admin::findOrFail($id);
+
+        // validating request
         $validatedData = $request->validate([
             'name' => 'required|max:255',
+            'image' => 'nullable|image',
             'email' => [Rule::unique('admins')->ignore($id), 'nullable', 'max:255', 'email'],
             'password' => 'required',
             'confirm_password' => 'required|same:password'
         ]);
 
+        // storing image
+        if ($request->image !== null) {
+            $validatedData['image'] = $request->file('image')->store('images');
+        } else {
+            $validatedData['image'] = $admin->image;
+        }
+
+        // hashing password
         $validatedData['password'] = Hash::make($request->password);
 
+        // update admin
         $admin->update($validatedData);
+
+        // redirect to view
         return redirect('mynotes-admins')->with('success', 'Data Updated Successfully');
     }
 
@@ -112,8 +140,18 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
+        // find admin
         $admin = Admin::findOrFail($id);
+
+        // deleting image
+        if ($admin->image !== 'images/default.png') {
+            Storage::delete($admin->image);
+        }
+
+        // deleting admin
         $admin->delete();
+
+        // redirect back to view
         return back()->with('success', 'Data Deleted Successfully');
     }
 }

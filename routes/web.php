@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,15 +20,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect('/mynotes-admins');
 });
-
-Route::resource('/mynotes-admins', AdminController::class);
-Route::resource('/mynotes-users', UserController::class);
+// main
+Route::middleware('auth-custom')->group(function () {
+    Route::resource('/mynotes-admins', AdminController::class);
+    Route::resource('/mynotes-users', UserController::class);
+    Route::post('/auth/logout', [AuthController::class, 'authLogout']);
+});
 
 // Auth
-Route::get('/auth/login', [AuthController::class, 'login']);
-Route::get('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/login', [AuthController::class, 'authLogin']);
-Route::post('/auth/register', [AuthController::class, 'authRegister']);
-Route::get('/test', function () {
-    return view('tables');
+Route::middleware('guest-custom')->group(function () {
+    Route::get('/auth/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/auth/login', [AuthController::class, 'authLogin']);
 });

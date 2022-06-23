@@ -9,7 +9,7 @@
             <div class="card-body">
                 <div class="d-flex">
                     <div class="mr-3">
-                        <img src="{{ asset('storage/' . $user->image) }}" style="max-width: 150px" alt="{{ $user->name }}">
+                        <img src="{{ $user->image }}" style="max-width: 150px" alt="{{ $user->name }}">
                     </div>
                     <table class="table-responsive">
                         <tbody>

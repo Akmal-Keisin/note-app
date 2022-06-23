@@ -19,7 +19,7 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'phone_number' => $this->faker->phoneNumber(),
-            'image' => 'images/default.png',
+            'image' => 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/images/default.png',
             'email_verified_at' => now(),
             'password' => Hash::make(123456), // password
             'remember_token' => Str::random(10),

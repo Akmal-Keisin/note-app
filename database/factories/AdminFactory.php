@@ -17,7 +17,7 @@ class AdminFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'image' => 'images/default.png',
+            'image' => 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/images/default.png',
             'password' => Hash::make(123456),
         ];
     }

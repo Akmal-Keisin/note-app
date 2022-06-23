@@ -4,7 +4,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Users List Data</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Admins List Data</h6>
         @if ($message = Session::get('success'))
             <div class="alert alert-success m-3">
                 {{ $message }}
@@ -14,8 +14,8 @@
     <div class="card-body">
         <div class="table-responsive">
             <div class="d-flex justify-content-between align-items-center">
-                <h3>Users Data</h3>
-                <a href="/mynotes-admins/create" class="btn btn-primary mb-3">Add+</a>
+                <h3>Admins Data</h3>
+                <a href="{{ env('APP_URL') }}/mynotes-admins/create" class="btn btn-primary mb-3">Add+</a>
             </div>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
@@ -33,9 +33,9 @@
                         <td>{{ $admin->name }}</td>
                         <td>{{ $admin->email }}</td>
                         <td>
-                            <a href="/mynotes-admins/{{ $admin->id }}" class="btn btn-info">Show</a>
-                            <a href="/mynotes-admins/{{ $admin->id }}/edit" class="btn btn-warning">Edit</a>
-                            <form action="/mynotes-admins/{{ $admin->id }}" method="POST" class="d-inline-block">
+                            <a href="{{ env('APP_URL') }}/mynotes-admins/{{ $admin->id }}" class="btn btn-info">Show</a>
+                            <a href="{{ env('APP_URL') }}/mynotes-admins/{{ $admin->id }}/edit" class="btn btn-warning">Edit</a>
+                            <form action="{{ env('APP_URL') }}/mynotes-admins/{{ $admin->id }}" method="POST" class="d-inline-block">
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="btn btn-danger" onclick="return confirm('Are You Sure?')">Delete</button>

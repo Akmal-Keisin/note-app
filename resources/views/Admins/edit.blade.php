@@ -16,7 +16,7 @@
                         </ul>
                     </div>
                 @endif
-                <form action="/mynotes-admins/{{ $admin->id }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ env('APP_URL') }}/mynotes-admins/{{ $admin->id }}" method="POST" enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
                     <div class="form-group">

@@ -51,9 +51,9 @@ class AdminController extends Controller
 
         // storing image
         if ($request->image !== null) {
-            $validatedData['image'] = $request->file('image')->store('images');
+            $validatedData['image'] = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/' . $request->file('image')->store('images');
         } else {
-            $validatedData['image'] = 'images/default.png';
+            $validatedData['image'] = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/images/default.png';
         }
 
         // hashing password
@@ -117,7 +117,9 @@ class AdminController extends Controller
 
         // storing image
         if ($request->image !== null) {
-            $validatedData['image'] = $request->file('image')->store('images');
+	    $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', $admin->image);
+	    Storage::delete($image);
+            $validatedData['image'] = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/' . $request->file('image')->store('images');
         } else {
             $validatedData['image'] = $admin->image;
         }
@@ -145,7 +147,8 @@ class AdminController extends Controller
 
         // deleting image
         if ($admin->image !== 'images/default.png') {
-            Storage::delete($admin->image);
+	    $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', $admin);
+            Storage::delete($image);
         }
 
         // deleting admin

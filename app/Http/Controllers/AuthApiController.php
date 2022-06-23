@@ -35,9 +35,9 @@ class AuthApiController extends Controller
         $data = $request->all();
         try {
             if ($request->hasFile('image')) {
-                $data['image'] = env('APP_BASE_URL') . '/storage/' . $request->file('image')->store('images');
+                $data['image'] = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/' . $request->file('image')->store('images');
             } else {
-                $data['image'] = env('APP_BASE_URL') . '/storage/images/default.png';
+                $data['image'] = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/images/default.png';
             }
             $data['password'] = Hash::make($request->password);
             $user = User::create($data);
@@ -109,7 +109,6 @@ class AuthApiController extends Controller
         try {
             // checking is user send bearer token or not
             if ($request->bearerToken()) {
-
                 // deleting user token
                 $request->user()->currentAccessToken()->delete();
                 return response()->json([

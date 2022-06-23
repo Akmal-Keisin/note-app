@@ -2,152 +2,83 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
-class UserController extends Controller
+class UserApiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function show()
     {
-        $users = User::all();
-        return view("Users.index", [
-            'users' => $users
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view("Users.create");
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        // validating data
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|unique:users,email|max:255',
-            'phone_number' => 'required|numeric',
-            'password' => 'required',
-            'confirm_password' => 'required|same:password',
-            'image' => 'nullable|image'
-        ]);
-
-        // storing image
-        if ($request->image !== null) {
-            $validatedData['image'] = $request->file('image')->store('images');
-        } else {
-            $validatedData['image'] = 'images/default.png';
+        try {
+            return response()->json([
+                'status' => 200,
+                'info' => 'Data Obtained Successfully',
+                'data' => Auth::user()
+            ], 200);
+        } catch (QueryException $e) {
+            return response()->json([
+                'status' => 500,
+                'info' => 'Internal Server Error',
+                'data' => $e->errorInfo
+            ], 500);
         }
-
-        // hashing password
-        $validatedData['password'] = Hash::make($request->password);
-
-        // create user
-        User::create($validatedData);
-        return redirect('mynotes-users')->with('success', 'Data Created Successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function update(Request $request)
     {
-        $user = User::findOrFail($id);
-        return view("Users.show", [
-            'user' => $user
-        ]);
-    }
+        try {
+            // Find User
+            $user = User::find(Auth::user()->id);
+            // Check user exist or not
+            if ($user) {
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $user = User::findOrFail($id);
-        return view("Users.edit", [
-            'user' => $user
-        ]);
-    }
+                $user->name = ($request->name) ? $request->name : Auth::user()->name;
+                $user->email = ($request->email) ? $request->email : Auth::user()->email;
+                $user->phone_number = ($request->phone_number) ? $request->phone_number : Auth::user()->phone_number;
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        // validating password
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'email' => [Rule::unique('users')->ignore($id), 'nullable', 'max:255', 'email'],
-            'phone_number' => 'required|numeric',
-            'password' => 'required',
-            'confirm_password' => 'required|same:password',
-            'image' => 'nullable|image'
-        ]);
+                // Check is user set image or not
+                if ($request->hasFile('image')) {
+                    if (!str_contains(Auth::user()->image, 'images')) {
+                      $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', Auth::user()->image);
+                      Auth::user()->image = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/images/' . $image[1];
+                    }
+		                $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', Auth::user()->image);
+                    Storage::delete($image[1]);
+                    $user->image = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/' . $request->file('image')->store('images');
+                } else {
+                    if (!str_contains(Auth::user()->image, 'images')) {
+                      $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', Auth::user()->image);
+                      Auth::user()->image = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/images/' . $image[1];
+                    }
+                    $user->image = Auth::user()->image;
+                }
 
-        // find user
-        $user = User::findOrFail($id);
+                // Hashing password
+                $user->password = ($request->password) ? Hash::make($request->password) : Auth::user()->password;
+                $user->update();
 
-        // storing image
-        if ($request->image !== null) {
-            Storage::delete($user->image);
-            $validatedData['image'] = $request->file('image')->store('images');
-        } else {
-            $validatedData['image'] = $user->image;
+                // Returning api
+                return response()->json([
+                    'status' => 200,
+                    'info' => 'Data Updated Successfully',
+                    'data' => $user
+                ], 200);
+            }
+            return response()->json([
+                'status' => 404,
+                'info' => 'Data Not Found',
+                'data' => $user
+            ], 404);
+        } catch (QueryException $e) {
+            return response()->json([
+                'status' => 500,
+                'info' => 'Internal Server Error',
+                'data' => $e->errorInfo
+            ], 500);
         }
-
-        // hashing password
-        $validatedData['password'] = Hash::make($request->password);
-
-        // update user
-        $user->update($validatedData);
-
-        // return view
-        return redirect('mynotes-users')->with('success', 'Data Updated Successfully');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $user = User::findOrFail($id);
-        if ($user->image !== 'images/default.png') {
-            Storage::delete($user->image);
-        }
-        $user->delete();
-        return back()->with('success', 'Data Deleted Successfully');
     }
 }

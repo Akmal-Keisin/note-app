@@ -15,7 +15,7 @@
         <div class="table-responsive">
             <div class="d-flex justify-content-between align-items-center">
                 <h3>Users Data</h3>
-                <a href="/mynotes-users/create" class="btn btn-primary mb-3">Add+</a>
+                <a href="{{ env('APP_URL') }}/mynotes-users/create" class="btn btn-primary mb-3">Add+</a>
             </div>
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
@@ -35,9 +35,9 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->phone_number }}</td>
                         <td>
-                            <a href="/mynotes-users/{{ $user->id }}" class="btn btn-info">Show</a>
-                            <a href="/mynotes-users/{{ $user->id }}/edit" class="btn btn-warning">Edit</a>
-                            <form action="/mynotes-users/{{ $user->id }}" method="POST" class="d-inline-block">
+                            <a href="{{ env('APP_URL') }}/mynotes-users/{{ $user->id }}" class="btn btn-info">Show</a>
+                            <a href="{{ env('APP_URL') }}/mynotes-users/{{ $user->id }}/edit" class="btn btn-warning">Edit</a>
+                            <form action="{{ env('APP_URL') }}/mynotes-users/{{ $user->id }}" method="POST" class="d-inline-block">
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="btn btn-danger" onclick="return confirm('Are You Sure')">Delete</button>

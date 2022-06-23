@@ -17,7 +17,7 @@ class NoteFactory extends Factory
             'user_id' => $this->faker->numberBetween(1, 3),
             'title' => $this->faker->sentence(rand(2, 5)),
             'body' => $this->faker->paragraph(rand(5, 10)),
-            'image' => env('APP_BASE_URL') . '/storage/images/notedefault.png'
+            'image' => null
         ];
     }
 }

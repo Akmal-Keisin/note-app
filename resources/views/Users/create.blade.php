@@ -16,20 +16,20 @@
                         </ul>
                     </div>
                 @endif
-                <form action="/mynotes-users" method="POST" enctype="multipart/form-data">
+                <form action="{{ env('APP_URL') }}/mynotes-users" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="">
                                     <label for="name" class="form-label">Name :</label>
-                                    <input type="text" class="form-control" name="name" placeholder="Admin Name" value="{{ old('name') }}">
+                                    <input type="text" class="form-control" name="name" placeholder="User Name" value="{{ old('name') }}">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="">
                                     <label for="email" class="form-label">Email :</label>
-                                    <input type="email" class="form-control" name="email" placeholder="Admin Email" value="{{ old('email') }}">
+                                    <input type="email" class="form-control" name="email" placeholder="User Email" value="{{ old('email') }}">
                                 </div>
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password :</label>
-                        <input type="password" class="form-control" name="password" placeholder="Admin Password">
+                        <input type="password" class="form-control" name="password" placeholder="User Password">
                     </div>
                     <div class="mb-3">
                         <label for="confirm_password" class="form-label">Confirm Password :</label>

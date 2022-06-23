@@ -15,7 +15,7 @@
                     <!-- Nested Row within Card Body -->
                     <div class="row">
                         <div class="col-lg-6 d-none d-lg-block">
-                            <img style="width: 100%" src="{{ asset('storage/images/default.png') }}" alt="">
+                            <img style="width: 100%" src="https://magang.crocodic.net/ki/kelompok_3/note-backend/public/images/default.png" alt="">
                         </div>
                         <div class="col-lg-6">
                             <div class="p-5">
@@ -35,7 +35,7 @@
                                         {{ $msg }}
                                     </div>
                                 @endif
-                                <form class="user" method="POST" action="/auth/login" enctype="multipart/form-data">
+                                <form class="user" method="POST" action="{{ env('APP_URL') }}/auth/login" enctype="multipart/form-data">
                                     @csrf
                                     <div class="form-group">
                                         <input type="email" class="form-control form-control-user" id="exampleInputEmail"

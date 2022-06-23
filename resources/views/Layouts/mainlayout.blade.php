@@ -35,22 +35,12 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="https://magang.crocodic.net/ki/kelompok_3/note-backend/public/">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-book"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3 text-left">My Notes Dashboard</div>
             </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item {{ (Request::is('dashboard') ? 'active' : '') }}">
-                <a class="nav-link" href="/">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-            </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -62,14 +52,14 @@
 
             <!-- Nav Item - Users -->
             <li class="nav-item {{ Request::is('mynotes-users*') ? 'active' : '' }}">
-                <a class="nav-link" href="/mynotes-users">
+                <a class="nav-link" href="{{ env('APP_URL') }}/mynotes-users">
                     <i class="fas fa-fw fa-user"></i>
                     <span>Users</span></a>
             </li>
 
             <!-- Nav Item - Admins -->
             <li class="nav-item {{ (Request::is('mynotes-admins*') ? 'active' : '') }}">
-                <a class="nav-link" href="/mynotes-admins">
+                <a class="nav-link" href="{{ env('APP_URL') }}/mynotes-admins">
                     <i class="fas fa-fw fa-user"></i>
                     <span>Admins</span></a>
             </li>
@@ -106,7 +96,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Session::get('auth')['data']['name'] }}</span>
                                 <img class="img-profile rounded-circle"
-                                    src="{{ asset('storage/' . Session::get('auth')['data']['image']) }}">
+                                    src="{{ asset(Session::get('auth')['data']['image']) }}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -168,7 +158,7 @@
                     </button>
                 </div>
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <form action="/auth/logout" class="modal-footer" method="POST">
+                <form action="{{ env('APP_URL') }}/auth/logout" class="modal-footer" method="POST">
                     @csrf
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <button class="btn btn-primary" type="submit">Logout</button>

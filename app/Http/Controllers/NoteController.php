@@ -77,7 +77,7 @@ class NoteController extends Controller
 
             // storing image
             if ($request->image !== null) {
-                $data['image'] = env('APP_BASE_URL') . '/storage/' . $request->file('image')->store('images');
+                $data['image'] = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/' . $request->file('image')->store('images');
             } else {
                 $data['image'] = $request->image;
             }
@@ -180,14 +180,23 @@ class NoteController extends Controller
 
                     // storing image
                     if ($request->image !== null) {
-                        Storage::delete($usernote->image);
-                        $data['image'] = env('APP_BASE_URL') . '/storage/' . $request->file('image')->store('images');
+			if ($usernote->image !== null) {
+			    $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', $usernote->image);
+			    if (count($image) > 1 && $image[1] !== "default.png") {
+				Storage::delete($image[1]);
+                                $data['image'] = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/' . $request->file('image')->store('images');
+			    } else {
+                                $data['image'] = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/' . $request->file('image')->store('images');
+			    }
+            		} else {
+			    $data['image'] = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/' . $request->file('image')->store('images');
+			}
+			
                     } else {
-                        $data['image'] = $usernote->image;
-                    }
+                        $data['image'] = $usernote->image;                    }
 
                     // updating data
-                    $usernote->update($request->all());
+                    $usernote->update($data);
 
                     // return success
                     return response()->json([
@@ -237,7 +246,10 @@ class NoteController extends Controller
 
                 // deleting image
                 if ($note->image !== env('APP_BASE_URL') . 'images/notedefault.png') {
-                    Storage::delete($note->image);
+        	    $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', $note->image);
+			if (count($image) > 1) {
+			    Storage::delete($image[1]);
+			}
                 }
 
                 // deleting data

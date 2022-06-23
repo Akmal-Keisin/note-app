@@ -14,5 +14,6 @@ class Note extends Model
         'image',
         'title',
         'body',
+        'pin'
     ];
 }

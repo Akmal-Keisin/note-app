@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthApiController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\PinController;
 use App\Http\Controllers\UserApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthApiController::class, 'authLogout']);
     Route::get('/user-profile', [UserApiController::class, 'show']);
     Route::put('/user-profile', [UserApiController::class, 'update']);
+
+    Route::post('/mynote/pin', [PinController::class, 'pin']);
+    Route::post('/mynote/pin/all', [PinController::class, 'getAllPinnedNotes']);
 });
 
 Route::get('/', function () {

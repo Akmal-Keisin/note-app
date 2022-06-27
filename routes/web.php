@@ -23,6 +23,7 @@ Route::get('/', function () {
 // main
 Route::middleware('auth-custom')->group(function () {
     Route::resource('/mynotes-admins', AdminController::class);
+    // Route::resource('/mynotes-users',);
     Route::resource('/mynotes-users', UserController::class);
     Route::post('/auth/logout', [AuthController::class, 'authLogout']);
 });

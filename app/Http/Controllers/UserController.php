@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Storage;
 
 class UserApiController extends Controller
 {
+    public function index()
+    {
+        $data = User::all();
+        return view('Users.index', [
+            'users' => $data
+        ]);
+    }
+
     public function show()
     {
         try {
@@ -43,16 +51,16 @@ class UserApiController extends Controller
                 // Check is user set image or not
                 if ($request->hasFile('image')) {
                     if (!str_contains(Auth::user()->image, 'images')) {
-                      $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', Auth::user()->image);
-                      Auth::user()->image = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/images/' . $image[1];
+                        $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', Auth::user()->image);
+                        Auth::user()->image = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/images/' . $image[1];
                     }
-		                $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', Auth::user()->image);
+                    $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', Auth::user()->image);
                     Storage::delete($image[1]);
                     $user->image = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/' . $request->file('image')->store('images');
                 } else {
                     if (!str_contains(Auth::user()->image, 'images')) {
-                      $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', Auth::user()->image);
-                      Auth::user()->image = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/images/' . $image[1];
+                        $image = explode('https://magang.crocodic.net/ki/kelompok_3/note-backend/public/', Auth::user()->image);
+                        Auth::user()->image = 'https://magang.crocodic.net/ki/kelompok_3/note-backend/public/images/' . $image[1];
                     }
                     $user->image = Auth::user()->image;
                 }

@@ -9,7 +9,7 @@
             <div class="card-body">
                 <div class="d-flex">
                     <div class="mr-3">
-                        <img src="@if ($user->image == null) {{ env('APP_URL') . '/images/default.png' }} @endif" style="max-width: 150px" alt="{{ $user->name }}">
+                        <img src="@if ($user->image == null) {{ env('APP_URL') . '/images/default.png' }} @else {{ $user->image }} @endif" style="max-width: 150px" alt="{{ $user->name }}">
                     </div>
                     <table class="table-responsive">
                         <tbody>
